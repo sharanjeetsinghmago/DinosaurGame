@@ -11,6 +11,7 @@ pkg_check_modules(LVGL REQUIRED lvgl)
 pkg_check_modules(LV_DRIVERS REQUIRED lv-drivers)
 pkg_check_modules(LIBDRM REQUIRED libdrm)
 pkg_check_modules(LIBINPUT REQUIRED libinput)
+pkg_check_modules(FREETYPE REQUIRED freetype2)
 
 add_executable(dino_game
     main.cpp
@@ -36,6 +37,7 @@ target_include_directories(dino_game PRIVATE
     ${LV_DRIVERS_INCLUDE_DIRS}
     ${LIBDRM_INCLUDE_DIRS}
     ${LIBINPUT_INCLUDE_DIRS}
+    ${FREETYPE_INCLUDE_DIRS}
 )
 
 target_link_libraries(dino_game PRIVATE
@@ -43,6 +45,7 @@ target_link_libraries(dino_game PRIVATE
     ${LVGL_LIBRARIES}
     ${LIBDRM_LIBRARIES}
     ${LIBINPUT_LIBRARIES}
+    ${FREETYPE_LIBRARIES}
     pthread
 )
 
@@ -51,4 +54,5 @@ target_link_directories(dino_game PRIVATE
     ${LV_DRIVERS_LIBRARY_DIRS}
     ${LIBDRM_LIBRARY_DIRS}
     ${LIBINPUT_LIBRARY_DIRS}
+    ${FREETYPE_LIBRARY_DIRS}
 )
