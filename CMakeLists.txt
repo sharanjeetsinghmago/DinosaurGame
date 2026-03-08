@@ -18,10 +18,16 @@ add_executable(dino_game
 )
 
 target_compile_definitions(dino_game PRIVATE
-    USE_DRM=1
-    USE_LIBINPUT=1
-    LV_LVGL_H_INCLUDE_SIMPLE
+    # Skip lv_drv_conf.h — we provide our own defines
     LV_DRV_NO_CONF
+    # LVGL include style
+    LV_LVGL_H_INCLUDE_SIMPLE
+    # Enable DRM display driver
+    USE_DRM=1
+    DRM_CARD="/dev/dri/card0"
+    DRM_CONNECTOR_ID=-1
+    # Enable libinput input driver
+    USE_LIBINPUT=1
 )
 
 target_include_directories(dino_game PRIVATE

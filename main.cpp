@@ -18,7 +18,7 @@ int main(int argc, char **argv)
     lv_coord_t disp_width = 0, disp_height = 0;
     uint32_t dpi = 0;
     drm_get_sizes(&disp_width, &disp_height, &dpi);
-    printf("Display: %dx%d @ %u dpi\n", disp_width, disp_height, dpi);
+    printf("Dinosaur Game: Display %dx%d @ %u dpi\n", disp_width, disp_height, dpi);
 
     // 3. Set up display buffers (double-buffered, full screen)
     uint32_t buf_size = disp_width * disp_height;
@@ -31,17 +31,25 @@ int main(int argc, char **argv)
     // 4. Register display driver
     static lv_disp_drv_t disp_drv;
     lv_disp_drv_init(&disp_drv);
-    disp_drv.draw_buf   = &draw_buf;
-    disp_drv.flush_cb   = drm_flush;
-    disp_drv.hor_res    = disp_width;
-    disp_drv.ver_res    = disp_height;
+    disp_drv.draw_buf    = &draw_buf;
+    disp_drv.flush_cb    = drm_flush;
+    disp_drv.hor_res     = disp_width;
+    disp_drv.ver_res     = disp_height;
     disp_drv.direct_mode = 0;
     disp_drv.full_refresh = 0;
     disp_drv.antialiasing = 1;
-    disp_drv.sw_rotate  = 1;
+    disp_drv.sw_rotate   = 1;
     lv_disp_drv_register(&disp_drv);
 
     // 5. Initialize libinput keyboard driver
+    //    Auto-detect keyboard device via libinput_find_dev
+    char *kb_dev = libinput_find_dev(LIBINPUT_CAPABILITY_KEYBOARD, true);
+    if (kb_dev) {
+        printf("Dinosaur Game: Keyboard found at %s\n", kb_dev);
+        libinput_set_file(kb_dev);
+    } else {
+        printf("Dinosaur Game: No keyboard found, using default\n");
+    }
     libinput_init();
 
     static lv_indev_drv_t indev_drv;
