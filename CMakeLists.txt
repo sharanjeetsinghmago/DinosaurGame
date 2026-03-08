@@ -6,12 +6,26 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(PkgConfig REQUIRED)
 
-# Find system-installed LVGL and drivers
-pkg_check_modules(LVGL REQUIRED lvgl)
-pkg_check_modules(LV_DRIVERS REQUIRED lv-drivers)
-pkg_check_modules(LIBDRM REQUIRED libdrm)
-pkg_check_modules(LIBINPUT REQUIRED libinput)
-pkg_check_modules(FREETYPE REQUIRED freetype2)
+# Detect cross-compilation (Yocto target) vs host (CLion IDE)
+if(CMAKE_CROSSCOMPILING)
+    # Target build: all libraries available via Yocto sysroot
+    pkg_check_modules(LVGL REQUIRED lvgl)
+    pkg_check_modules(LV_DRIVERS REQUIRED lv-drivers)
+    pkg_check_modules(LIBDRM REQUIRED libdrm)
+    pkg_check_modules(LIBINPUT REQUIRED libinput)
+    pkg_check_modules(FREETYPE REQUIRED freetype2)
+else()
+    # Host build: libraries are optional (IDE code navigation only)
+    pkg_check_modules(LVGL lvgl)
+    pkg_check_modules(LV_DRIVERS lv-drivers)
+    pkg_check_modules(LIBDRM libdrm)
+    pkg_check_modules(LIBINPUT libinput)
+    pkg_check_modules(FREETYPE freetype2)
+
+    if(NOT LVGL_FOUND)
+        message(WARNING "Host build: LVGL not found. CMake will configure for IDE support only — binary will not link.")
+    endif()
+endif()
 
 add_executable(dino_game
     main.cpp
